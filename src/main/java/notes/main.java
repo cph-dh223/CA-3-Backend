@@ -33,7 +33,7 @@ public class main {
 
     private static void setup(EntityManagerFactory emf){
         try (EntityManager em = emf.createEntityManager()) {
-            if(em.find(Note.class, 1) != null) return;
+            // if(em.find(Note.class, 1) != null) return;
             em.getTransaction().begin();
             em.createQuery("DELETE FROM Note h").executeUpdate();
             em.createQuery("DELETE FROM User u").executeUpdate();
@@ -50,10 +50,14 @@ public class main {
             admin.addNote(n1);
             admin.addNote(n2);
             admin.addNote(n3);
+            System.out.println(admin.getNotes());
 
             Role adminRole = new Role("admin");
             admin.addRole(adminRole);
-
+            
+            em.persist(n1);
+            em.persist(n2);
+            em.persist(n3);
             em.persist(admin);
             em.persist(adminRole);
 

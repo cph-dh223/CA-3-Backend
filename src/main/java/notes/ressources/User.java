@@ -21,8 +21,8 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Note> notes;
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
+    private Set<Note> notes = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "user_roles",

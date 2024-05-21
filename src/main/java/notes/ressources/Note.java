@@ -1,36 +1,52 @@
 package notes.ressources;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.metamodel.mapping.internal.GeneratedValuesProcessor;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@ToString
 public class Note {
-    private String title;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
+    private String title;
     private Category category;
     private LocalDate date;
     private LocalDate lastEditDate;
 
     @ManyToMany
-    private Set<User> users;
+    // @ToString.Exclude
+    @JsonBackReference
+    private Set<User> users = new HashSet<>();
     private String content;
 
-    public Note(String title, String content){
+    public Note(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         users.add(user);
     }
+
 }
