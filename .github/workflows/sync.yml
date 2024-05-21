@@ -11,5 +11,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.CI_TOKEN }}
-          repository: cph-dh223/CA-3-Backend
+          repository: cph-dh223/CA-3
           event-type: update-submodule
