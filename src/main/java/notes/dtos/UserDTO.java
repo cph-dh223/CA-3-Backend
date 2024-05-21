@@ -16,18 +16,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class UserDTO {
-    private String username;
+    private String email;
     private String password;
     private Set<String> roles;
 
     public UserDTO (User user){
-        username = user.getUsername();
+        email = user.getEmail();
         password = user.getPassword();
         roles    = user.getRolesAsStrings();
     }
 
     public UserDTO(String username, Set<String> rolesSet) {
-        this.username = username;
+        this.email = username;
         roles = rolesSet;
     }
 }

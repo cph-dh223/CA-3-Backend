@@ -22,7 +22,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 public class TokenUtils {
-    public UserDTO getUserWithRolesFromToken(String token) throws ParseException {
+    public static UserDTO getUserWithRolesFromToken(String token) throws ParseException {
         // Return a user with Set of roles as strings
         SignedJWT jwt = SignedJWT.parse(token);
         String roles = jwt.getJWTClaimsSet().getClaim("roles").toString();
@@ -33,7 +33,7 @@ public class TokenUtils {
                 .collect(Collectors.toSet());
         return new UserDTO(username, rolesSet);
     }
-    public boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
+    public static boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
         SignedJWT jwt = SignedJWT.parse(token);
         if (jwt.verify(new MACVerifier(secret)))
             return true;
@@ -41,24 +41,24 @@ public class TokenUtils {
             throw new NotAuthorizedException(403, "Token is not valid");
     }
 
-    public boolean tokenNotExpired(String token) throws ParseException, NotAuthorizedException {
+    public static boolean tokenNotExpired(String token) throws ParseException, NotAuthorizedException {
         if (timeToExpire(token) > 0)
             return true;
         else
             throw new NotAuthorizedException(403, "Token has expired");
     }
-    public int timeToExpire(String token) throws ParseException, NotAuthorizedException {
+    public static int timeToExpire(String token) throws ParseException, NotAuthorizedException {
         SignedJWT jwt = SignedJWT.parse(token);
         return (int) (jwt.getJWTClaimsSet().getExpirationTime().getTime() - new Date().getTime());
     }
 
-    public String createToken(UserDTO user, String ISSUER, String TOKEN_EXPIRE_TIME, String SECRET_KEY){
+    public static String createToken(UserDTO user, String ISSUER, String TOKEN_EXPIRE_TIME, String SECRET_KEY){
         // https://codecurated.com/blog/introduction-to-jwt-jws-jwe-jwa-jwk/
         try {
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(user.getUsername())
+                    .subject(user.getEmail())
                     .issuer(ISSUER)
-                    .claim("username", user.getUsername())
+                    .claim("username", user.getEmail())
                     .claim("roles", user.getRoles().stream().reduce("",(s1, s2) -> s1 + "," + s2))
                     .expirationTime(new Date(new Date().getTime() + Integer.parseInt(TOKEN_EXPIRE_TIME)))
                     .build();
