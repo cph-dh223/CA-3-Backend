@@ -39,7 +39,6 @@ public class UserDAO implements ISecurityDAO {
             user.addRole(userRole);
             em.persist(user);
             em.getTransaction().commit();
-            em.close();
             return user;
         }
     }
@@ -76,7 +75,6 @@ public class UserDAO implements ISecurityDAO {
             user.addRole(userRole);
             em.persist(user);
             em.getTransaction().commit();
-            em.close();
             return user;
         }
     }
