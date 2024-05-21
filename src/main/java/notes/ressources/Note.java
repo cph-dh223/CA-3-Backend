@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,14 +29,14 @@ public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     private String title;
     private Category category;
     private LocalDate date;
     private LocalDate lastEditDate;
 
     @ManyToMany
-    // @ToString.Exclude
+    @ToString.Exclude
     @JsonBackReference
     private Set<User> users = new HashSet<>();
     private String content;
@@ -47,6 +48,16 @@ public class Note {
 
     public void addUser(User user) {
         users.add(user);
+    }
+
+    @PrePersist
+    public void prePersist(){
+        date = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        lastEditDate = LocalDate.now();
     }
 
 }
