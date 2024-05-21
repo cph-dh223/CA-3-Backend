@@ -1,33 +1,15 @@
-name: Update Submodule
+name: Dispatch Update Submodule
 on:
-  repository_dispatch:
-    types:
-      - update-submodule
+  push:
+    branches:
+      - main
 jobs:
-  update-submodule:
+  dispatch:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Dispatch update to Git Blog Project
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.CI_TOKEN }}
-          submodules: recursive
-      - name: Authorize Git
-        run: |
-          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --global user.name "$GITHUB_ACTOR"
-      - name: Update submodule
-        run: |
-          git submodule update  --init --recursive --remote -f
-        env:
-          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
-      - name: Commit changes
-        run: |
-          git add CA-3-Backend
-          git commit -m "Update submodule to latest commit"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: cph-dh223/CA-3-Backend
+          event-type: update-submodule
