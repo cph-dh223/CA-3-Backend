@@ -35,14 +35,13 @@ public class main {
         try (EntityManager em = emf.createEntityManager()) {
             if(em.find(Note.class, 1) != null) return;
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM Room r").executeUpdate();
-            em.createQuery("DELETE FROM notes h").executeUpdate();
+            em.createQuery("DELETE FROM Note h").executeUpdate();
             em.createQuery("DELETE FROM User u").executeUpdate();
             em.createQuery("DELETE FROM Role r").executeUpdate();
             
-            Note n1 = new Note("h1", "Street 1");
-            Note n2 = new Note("h2", "Street 2");
-            Note n3 = new Note("h3", "Street 3");
+            Note n1 = new Note("n1", "THIS IS NOTE 1");
+            Note n2 = new Note("n2", "THIS IS NOTE 2");
+            Note n3 = new Note("n3", "THIS IS NOTE 3");
             
             
 
