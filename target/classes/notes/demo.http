@@ -1,0 +1,26 @@
+
+###
+POST Http://159.89.8.64:7070/api/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "username": "David",
+    "password": "1234"
+}
+
+###
+GET Http://159.89.8.64:7070/api/protected/user_demo HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjcGhidXNpbmVzcy5kayIsInN1YiI6IkRhdmlkIiwiZXhwIjoxNzE0OTg5MjUzLCJyb2xlcyI6Iix1c2VyIiwidXNlcm5hbWUiOiJEYXZpZCJ9.i8ofAhZOpdE1wKf1Vbew6mKreZn1L_46aOh8e137lio
+
+###
+PUT Http://159.89.8.64:7070/api/notes/ HTTP/1.1
+header name: header value
+
+###
+POST Http://localhost:7070/api/auth/login HTTP/1.1
+Content-Type: 'application/json'
+
+{
+    "username": "admin",
+    "password": "1234"
+}

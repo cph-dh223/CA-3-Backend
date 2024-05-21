@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="hotel.security.SecurityTests" time="14.131" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="notes.security.SecurityTests" time="14.131" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="19"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,7 +59,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="63.0"/>
   </properties>
-  <testcase name="userTryesToAccessAdmin" classname="hotel.security.SecurityTests" time="2.837">
+  <testcase name="userTryesToAccessAdmin" classname="notes.security.SecurityTests" time="2.837">
     <system-out><![CDATA[Hibernate: 
     alter table if exists Room 
        drop constraint if exists FK2ytua4fdw8ibyyn44ar9txtku
@@ -70,7 +70,7 @@ Hibernate:
     alter table if exists user_roles 
        drop constraint if exists FKscvbq0n9bo03s7w6ujfyrtg4a
 Hibernate: 
-    drop table if exists Hotel cascade
+    drop table if exists notes cascade
 Hibernate: 
     drop table if exists role cascade
 Hibernate: 
@@ -80,7 +80,7 @@ Hibernate:
 Hibernate: 
     drop table if exists users cascade
 Hibernate: 
-    create table Hotel (
+    create table notes (
         id serial not null,
         address varchar(255),
         name varchar(255),
@@ -93,7 +93,7 @@ Hibernate:
     )
 Hibernate: 
     create table Room (
-        hotel_id integer,
+        notes_id integer,
         id serial not null,
         occupied boolean not null,
         price float4 not null,
@@ -115,8 +115,8 @@ Hibernate:
 Hibernate: 
     alter table if exists Room 
        add constraint FK2ytua4fdw8ibyyn44ar9txtku 
-       foreign key (hotel_id) 
-       references Hotel
+       foreign key (notes_id) 
+       references notes
 Hibernate: 
     alter table if exists user_roles 
        add constraint FK53v9b6vwc56nm9llvcdhs8y8f 
@@ -153,42 +153,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -284,7 +284,7 @@ WARN: relation "user_roles" does not exist, skipping
 maj 06, 2024 11:58:09 AM org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler logWarning
 WARN: SQL Warning Code: 0, SQLState: 00000
 maj 06, 2024 11:58:09 AM org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler logWarning
-WARN: table "hotel" does not exist, skipping
+WARN: table "notes" does not exist, skipping
 maj 06, 2024 11:58:09 AM org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler logWarning
 WARN: SQL Warning Code: 0, SQLState: 00000
 maj 06, 2024 11:58:09 AM org.hibernate.engine.jdbc.spi.SqlExceptionHelper$StandardWarningHandler logWarning
@@ -323,7 +323,7 @@ INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.
 [main] INFO io.javalin.Javalin - Javalin started in 220ms \o/
 ]]></system-err>
   </testcase>
-  <testcase name="login" classname="hotel.security.SecurityTests" time="0.373">
+  <testcase name="login" classname="notes.security.SecurityTests" time="0.373">
     <system-out><![CDATA[Hibernate: 
     /* DELETE 
     FROM
@@ -350,42 +350,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -416,7 +416,7 @@ Hibernate:
 }
 ]]></system-out>
   </testcase>
-  <testcase name="protectedAdmin" classname="hotel.security.SecurityTests" time="0.243">
+  <testcase name="protectedAdmin" classname="notes.security.SecurityTests" time="0.243">
     <system-out><![CDATA[Hibernate: 
     /* DELETE 
     FROM
@@ -443,42 +443,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -510,7 +510,7 @@ USER IN CHECK_SEC_ROLES: UserDTO(username=admin, password=null, roles=[, admin])
 }
 ]]></system-out>
   </testcase>
-  <testcase name="createUser" classname="hotel.security.SecurityTests" time="0.263">
+  <testcase name="createUser" classname="notes.security.SecurityTests" time="0.263">
     <system-out><![CDATA[Hibernate: 
     /* DELETE 
     FROM
@@ -537,42 +537,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -598,14 +598,14 @@ Hibernate:
         u1_0.role_name=?
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -618,7 +618,7 @@ Content-Length: 222
 {"token":"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEYXZpZCBBamtlbiBIYW5zZW4iLCJzdWIiOiJ0ZXN0MSIsImV4cCI6MTcxNDk5MTI5Mywicm9sZXMiOiIsdXNlciIsInVzZXJuYW1lIjoidGVzdDEifQ.usE8UpP_oAAvER-x-AsG_TkqtLhQPUbIUsYkbsntzQ0","userName":"test1"}
 ]]></system-out>
   </testcase>
-  <testcase name="defTest" classname="hotel.security.SecurityTests" time="0.172">
+  <testcase name="defTest" classname="notes.security.SecurityTests" time="0.172">
     <system-out><![CDATA[Hibernate: 
     /* DELETE 
     FROM
@@ -645,42 +645,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
@@ -693,7 +693,7 @@ Content-Length: 13
 "Hello World"
 ]]></system-out>
   </testcase>
-  <testcase name="protectedUser" classname="hotel.security.SecurityTests" time="0.279">
+  <testcase name="protectedUser" classname="notes.security.SecurityTests" time="0.279">
     <system-out><![CDATA[Hibernate: 
     /* DELETE 
     FROM
@@ -720,42 +720,42 @@ Hibernate:
         role
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User */insert 
+        notes.ressources.User */insert 
     into
         users (password,username) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.Role */insert 
+        notes.ressources.Role */insert 
     into
         role (name) 
     values
         (?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
         (?,?)
 Hibernate: 
     /* insert for
-        hotel.ressources.User.roles */insert 
+        notes.ressources.User.roles */insert 
     into
         user_roles (user_name,role_name) 
     values
