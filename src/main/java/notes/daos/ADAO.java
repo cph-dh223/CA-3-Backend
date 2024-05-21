@@ -8,9 +8,9 @@ import jakarta.persistence.EntityManagerFactory;
 import lombok.Getter;
 
 @Getter
-public abstract class ADAO<T> implements IDAO<T> {
+public abstract class ADAO<T, K> implements IDAO<T, K> {
     protected EntityManagerFactory emf;
-    protected Map<Integer,T> entityMap;
+    protected Map<K,T> entityMap;
 
     public ADAO(EntityManagerFactory emf) {
         this.emf = emf;

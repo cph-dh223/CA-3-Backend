@@ -18,16 +18,20 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    private String username;
+    private String email;
     private String password;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Note> notes;
+
     @ManyToMany
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "username"),
+            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"),
             inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     private Set<Role> roles = new HashSet<>();
 
     public User(String username, String password) {
-        this.username = username;
+        this.email = username;
         this.password = password;
         String salt = BCrypt.gensalt();
         this.password = BCrypt.hashpw(password, salt);
@@ -56,6 +60,11 @@ public class User {
             rolesAsStrings.add(role.getName());
         });
         return rolesAsStrings;
+    }
+
+    public void addNote(Note note){
+        notes.add(note);
+        note.addUser(this);
     }
 
 }
