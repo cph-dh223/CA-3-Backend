@@ -82,4 +82,24 @@ public class NoteController implements IController {
         };
     }
 
+    public Handler getByTitle() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'getByTitle'");
+    }
+
+    public Handler sortByTitle() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'sortByTitle'");
+    }
+
+    public Handler sortByCategory() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'sortByCategory'");
+    }
+
+    public Handler sortByDate() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'sortByDate'");
+    }
+
 }

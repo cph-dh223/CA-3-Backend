@@ -6,6 +6,7 @@ import notes.controlers.IController;
 import notes.controlers.ISecurityController;
 import notes.controlers.NoteController;
 import notes.controlers.SecurityController;
+import notes.controlers.UserController;
 import notes.daos.NoteDAO;
 import notes.daos.UserDAO;
 import io.javalin.apibuilder.EndpointGroup;
@@ -29,7 +30,9 @@ public class Routs {
 
     public static EndpointGroup securedRoutes(EntityManagerFactory emf) {
         ISecurityController securityController = new SecurityController(new UserDAO(emf));
-        IController noteController = new NoteController(new NoteDAO(emf));
+        NoteController noteController = new NoteController(new NoteDAO(emf));
+        UserController userController = new UserController(new UserDAO(emf));
+
         return () -> {
             path("/protected", () -> {
                 before(securityController.authenticate());
@@ -40,21 +43,29 @@ public class Routs {
             });
             path("/user", () -> {
                 path("/note", () -> {
-                    before(securityController.authenticate());
-                    post("/create", noteController.create(), Role.USER);
-                    get("/{id}", noteController.getById(), Role.USER);
-                    put("/update/{id}", noteController.update(), Role.USER);
-                    delete("/delete/{id}", noteController.delete(), Role.USER);
-                });
-                path("/notes", () -> {
-                    before(securityController.authenticate());
-                    get("/", noteController.getAll(), Role.ANYONE);
+                    post("/create", noteController.create(), Role.USER, Role.ADMIN);
+                    get("search/{id}", noteController.getById(), Role.USER, Role.ADMIN);
+                    put("/update/{id}", noteController.update(), Role.USER, Role.ADMIN);
+                    delete("/delete/{id}", noteController.delete(), Role.USER, Role.ADMIN);
                 });
             });
-        };
-    }
+            path("/notes", () -> {
+                get("/", noteController.getAll(), Role.USER, Role.ADMIN);
+                get("/search/{title}", noteController.getByTitle(), Role.ADMIN, Role.USER);
+                get("/sort/title", noteController.sortByTitle(), Role.ADMIN, Role.USER);
+                get("/sort/date", noteController.sortByDate(), Role.ADMIN, Role.USER);
+                get("/sort/category", noteController.sortByCategory(), Role.ADMIN, Role.USER);
+            });
+            path("/users", () -> {
+                get("/", userController.getAll(), Role.ADMIN);
+                get("/{id}", userController.getById(), Role.ADMIN);
+                put("/update", userController.update(), Role.ADMIN);
+                delete("/delete/{id}", userController.delete(), Role.ADMIN);
+            });
 
-    public static
+        };
+
+    }
 
     public static EndpointGroup unsecuredRoutes(EntityManagerFactory emf) {
         return () -> {
