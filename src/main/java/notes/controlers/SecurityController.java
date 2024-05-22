@@ -197,9 +197,4 @@ public class SecurityController implements ISecurityController {
     public int timeToExpire(String token) throws ParseException, NotAuthorizedException {
         return tokenUtils.timeToExpire(token);
     }
-
-    
-    
-    
-    
 }
