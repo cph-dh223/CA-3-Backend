@@ -1,6 +1,9 @@
 package notes.controlers;
 
+
+import java.util.stream.Collectors;
 import java.text.ParseException;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -90,11 +93,50 @@ public class NoteController implements IController {
         };
     }
 
+    public Handler getByTitle() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            var filterdNotes = notes.stream().filter(n -> n.getTitle().contains(title)).collect(Collectors.toList());
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(filterdNotes));
+        };
+    }
+
+    public Handler sortByTitle() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getTitle().compareTo(b.getTitle()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
+
+    public Handler sortByCategory() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getCategory().compareTo(b.getCategory()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
+
+    public Handler sortByDate() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
+  
     private String getUserIdFromToken(Context ctx) throws ParseException {
         var header = ctx.headerMap();
         var token = (header.get("Authorization").split(" "))[1];
         var userID = TokenUtils.getUserIdFromToken(token);
         return userID;
     }
-
 }
