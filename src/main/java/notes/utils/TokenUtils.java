@@ -26,13 +26,19 @@ public class TokenUtils {
         // Return a user with Set of roles as strings
         SignedJWT jwt = SignedJWT.parse(token);
         String roles = jwt.getJWTClaimsSet().getClaim("roles").toString();
-        String username = jwt.getJWTClaimsSet().getClaim("username").toString();
+        String email = jwt.getJWTClaimsSet().getClaim("email").toString();
 
         Set<String> rolesSet = Arrays
                 .stream(roles.split(","))
                 .collect(Collectors.toSet());
-        return new UserDTO(username, rolesSet);
+        return new UserDTO(email, rolesSet);
     }
+
+    public static String getUserIdFromToken(String token) throws ParseException {
+        SignedJWT jwt = SignedJWT.parse(token);
+        return jwt.getJWTClaimsSet().getClaim("email").toString();
+    }
+
     public static boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
         SignedJWT jwt = SignedJWT.parse(token);
         if (jwt.verify(new MACVerifier(secret)))
@@ -58,7 +64,7 @@ public class TokenUtils {
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(user.getEmail())
                     .issuer(ISSUER)
-                    .claim("username", user.getEmail())
+                    .claim("email", user.getEmail())
                     .claim("roles", user.getRoles().stream().reduce("",(s1, s2) -> s1 + "," + s2))
                     .expirationTime(new Date(new Date().getTime() + Integer.parseInt(TOKEN_EXPIRE_TIME)))
                     .build();

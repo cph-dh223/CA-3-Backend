@@ -1,13 +1,19 @@
 package notes.controlers;
 
+
 import java.util.stream.Collectors;
+import java.text.ParseException;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import notes.daos.NoteDAO;
 import notes.dtos.NoteDTO;
+import notes.dtos.UserDTO;
+import notes.exceptions.ApiException;
 import notes.ressources.Note;
 import notes.utils.TokenUtils;
 
@@ -27,10 +33,8 @@ public class NoteController implements IController {
     @Override
     public Handler getAll() {
         return ctx -> {
-            var header = ctx.headerMap();
-            var token = (header.get("Authorization").split(" "))[1];
-            var userDTO = TokenUtils.getUserWithRolesFromToken(token);
-            var usersNotes = noteDAO.getAll(userDTO.getEmail());
+            var userID = getUserIdFromToken(ctx);
+            var usersNotes = noteDAO.getAll(userID);
             // TODO error handeling
             ctx.json(om.writeValueAsString(usersNotes));
         };
@@ -39,10 +43,15 @@ public class NoteController implements IController {
     @Override
     public Handler getById() {
         return ctx -> {
-            var title = "n1"; // TODO get the rigth thing from the back end
-            var note = noteDAO.getById(title);
-            var noteDTO = new NoteDTO(note);
-            ctx.json(om.writeValueAsString(noteDTO));
+            var id = Integer.parseInt(ctx.pathParam("noteID"));
+            var userID = getUserIdFromToken(ctx);
+            var note = noteDAO.getById(id);
+            if (note.hasUser(userID)) {
+                var noteDTO = new NoteDTO(note);
+                ctx.status(HttpStatus.OK).json(om.writeValueAsString(noteDTO));
+                return;
+            }
+            throw new ApiException(HttpStatus.UNAUTHORIZED.getCode(), "Unauthorized. Token not valid for note");
         };
     }
 
@@ -60,7 +69,7 @@ public class NoteController implements IController {
     @Override
     public Handler delete() {
         return ctx -> {
-            String title = ctx.pathParam("title");
+            var title = Integer.parseInt(ctx.pathParam("nodeID"));
             Note note = noteDAO.getById(title);
             noteDAO.delete(note);
             ctx.status(HttpStatus.NO_CONTENT);
@@ -70,9 +79,9 @@ public class NoteController implements IController {
     @Override
     public Handler update() {
         return ctx -> {
-            String title = ctx.pathParam("title");
-            Note changedNote = ctx.bodyAsClass(Note.class);
-            Note note = noteDAO.getById(title);
+            var noteID = Integer.parseInt(ctx.pathParam("noteID"));
+            var changedNote = ctx.bodyAsClass(NoteDTO.class);
+            Note note = noteDAO.getById(noteID);
 
             note.setContent(changedNote.getContent());
             // TODO set up more of the changes
@@ -122,5 +131,12 @@ public class NoteController implements IController {
             notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));
             ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
         };
+    }
+  
+    private String getUserIdFromToken(Context ctx) throws ParseException {
+        var header = ctx.headerMap();
+        var token = (header.get("Authorization").split(" "))[1];
+        var userID = TokenUtils.getUserIdFromToken(token);
+        return userID;
     }
 }

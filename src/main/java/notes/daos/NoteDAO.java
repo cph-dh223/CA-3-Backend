@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import notes.ressources.Note;
 
-public class NoteDAO extends ADAO<Note, String> {
+public class NoteDAO extends ADAO<Note, Integer> {
 
     public NoteDAO(EntityManagerFactory emf) {
         super(emf);
@@ -26,7 +26,7 @@ public class NoteDAO extends ADAO<Note, String> {
     }
 
     @Override
-    public Note getById(String id) {
+    public Note getById(Integer id) {
         try(EntityManager em = emf.createEntityManager()){
             return em.find(Note.class, id);
         }
@@ -41,5 +41,7 @@ public class NoteDAO extends ADAO<Note, String> {
         }
         return note;
     }
+
+
     
 }
