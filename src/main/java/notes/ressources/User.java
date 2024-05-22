@@ -80,4 +80,8 @@ public class User {
     public void preRemove(){
         notes.forEach(n -> n.removeUser(this));
     }
+
+    public void removeNote(Note note) {
+        notes.remove(note);
+    }
 }

@@ -106,7 +106,9 @@ public class UserDAO implements ISecurityDAO {
             em.getTransaction().begin();
 
             var userToRemove = em.find(User.class, id);
+            var notes = userToRemove.getNotes();
             em.remove(userToRemove);
+            notes.forEach(n -> {if(n.getUsers().isEmpty()){em.remove(n);}});
             em.getTransaction().commit();
 
         }
