@@ -87,11 +87,45 @@ public class UserDAO implements ISecurityDAO {
         }
     }
 
+    public User getUserById(String id) {
+        try (var em = emf.createEntityManager()) {
+            return em.find(User.class, id);
+        }
+    }
+
     public List<Role> getAllRoles() {
         try (var em = emf.createEntityManager()) {
             TypedQuery<Role> q = em.createQuery("SELECT r FROM Role r", Role.class);
             List<Role> roles = q.getResultList();
             return roles;
         }
+    }
+
+    public void deleteUser(String id) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+
+            var userToRemove = em.find(User.class, id);
+            em.remove(userToRemove);
+            em.getTransaction().commit();
+
+        }
+    }
+
+    public User updateUser(User user) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            user.getRoles().stream().forEach(role -> {
+                Role userRole = em.find(Role.class, role.getName());
+                if (userRole == null) {
+                    userRole = new Role(role.getName());
+                    em.persist(userRole);
+                }
+                role = userRole;
+            });
+            em.merge(user);
+            em.getTransaction().commit();
+        }
+        return user;
     }
 }
