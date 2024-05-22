@@ -1,8 +1,6 @@
 package notes.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import notes.controlers.IController;
 import notes.controlers.ISecurityController;
 import notes.controlers.NoteController;
 import notes.controlers.SecurityController;

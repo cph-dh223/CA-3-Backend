@@ -9,9 +9,8 @@ import notes.ressources.Note;
 import notes.ressources.Role;
 import notes.ressources.User;
 
-
 public class TestUtils {
-    public void createNotes(EntityManagerFactory emfTest) {
+    public void createNotesAndUsers(EntityManagerFactory emfTest) {
         try (EntityManager em = emfTest.createEntityManager()) {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM Note n").executeUpdate();
@@ -26,12 +25,8 @@ public class TestUtils {
             em.persist(n3);
             em.persist(n4);
             em.getTransaction().commit();
-        }
-    }
 
-    public void createUsersAndRoles(EntityManagerFactory emfTest) {
-        // Clear any leftovers
-        try (EntityManager em = emfTest.createEntityManager()) {
+            // Setup notes
             em.getTransaction().begin();
             em.createQuery("DELETE FROM User").executeUpdate();
             em.createQuery("DELETE FROM Role").executeUpdate();
@@ -46,6 +41,8 @@ public class TestUtils {
 
             u2.addRole(r1);
             u1.addRole(r2);
+            u1.addNote(n1);
+            u1.addNote(n2);
 
             em.getTransaction().begin();
             em.persist(r1);

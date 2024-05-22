@@ -34,6 +34,7 @@ public class EndpointTest {
     // Start server
     appConfig = ApplicationConfig.getInstance(emfTest)
         .initiateServer()
+        .setExceptionHandling()
         .checkSecurityRoles()
         .setRoute(Routs.getSecurityRoutes(emfTest))
         .setRoute(Routs.securedRoutes(emfTest))
@@ -43,8 +44,7 @@ public class EndpointTest {
   @BeforeEach
   public void setUpEach() {
     // Setup test database for each test
-    new TestUtils().createNotes(emfTest);
-    new TestUtils().createUsersAndRoles(emfTest);
+    new TestUtils().createNotesAndUsers(emfTest);
   }
 
   @AfterAll
@@ -66,6 +66,20 @@ public class EndpointTest {
     return token;
   }
 
+  public TokenDTO getAdminToken() {
+    TokenDTO token = RestAssured
+    .given()
+    .contentType("application/json")
+    .body("{\"email\":\"admin\",\"password\":\"admin\"}")
+    .when()
+    .post("/auth/login")
+    .then()
+    .extract()
+    .as(TokenDTO.class);
+    return token;
+}
+
+
   @Test
   void getAllnotes() {
     TokenDTO token = getUserToken();
@@ -76,8 +90,54 @@ public class EndpointTest {
 
   @Test
   void createNote() {
-    given().contentType("application/json").body("{\"title\":\"test\",\"content\":\"test\",\"category\":\"test\"}")
-        .when().post("/user/note/create").peek().then().assertThat().statusCode(200);
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header)
+        .body("{\"title\":\"test\",\"content\":\"test\",\"category\":\"NOTE\"}")
+        .when().post("/user/note/create").peek().then().assertThat().statusCode(201);
   }
+
+  @Test
+  void updateNote() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header)
+        .body("{\"title\":\"test\",\"content\":\"test\"}").when()
+        .put("/user/note/update/1")
+        .peek().then().assertThat().statusCode(200);
+  }
+
+  @Test
+  void deleteNote() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().delete("/user/note/delete/1").peek().then().assertThat()
+        .statusCode(204);
+  }
+
+  @Test
+  void getNoteById() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/user/note/search/1").peek().then().assertThat()
+        .statusCode(200);
+  }
+
+  @Test
+  void getNoteByTitle() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/notes/search/title").peek().then().assertThat()
+        .statusCode(200);
+  }
+
+  @Test
+  void getAllUsers() {
+    TokenDTO token = getAdminToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/users").peek().then().assertThat()
+        .statusCode(200);
+  }
+
 
 }

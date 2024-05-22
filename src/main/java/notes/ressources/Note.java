@@ -26,6 +26,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
+@NoArgsConstructor
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
