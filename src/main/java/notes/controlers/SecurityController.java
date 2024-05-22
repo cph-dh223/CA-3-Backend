@@ -106,7 +106,7 @@ public class SecurityController implements ISecurityController {
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                     .subject(user.getEmail())
                     .issuer(ISSUER)
-                    .claim("username", user.getEmail())
+                    .claim("email", user.getEmail())
                     .claim("roles", user.getRoles().stream().reduce("", (s1, s2) -> s1 + "," + s2))
                     .expirationTime(new Date(new Date().getTime() + Integer.parseInt(TOKEN_EXPIRE_TIME)))
                     .build();

@@ -9,23 +9,6 @@ import notes.ressources.Note;
 import notes.ressources.Role;
 import notes.ressources.User;
 
-import static io.javalin.apibuilder.ApiBuilder.delete;
-import static io.javalin.apibuilder.ApiBuilder.get;
-import static io.javalin.apibuilder.ApiBuilder.path;
-import static io.javalin.apibuilder.ApiBuilder.post;
-import static io.javalin.apibuilder.ApiBuilder.put;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.mail.Address;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.javalin.apibuilder.EndpointGroup;
 
 public class TestUtils {
     public void createNotes(EntityManagerFactory emfTest) {
@@ -47,25 +30,28 @@ public class TestUtils {
     }
 
     public void createUsersAndRoles(EntityManagerFactory emfTest) {
+        // Clear any leftovers
         try (EntityManager em = emfTest.createEntityManager()) {
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM User u").executeUpdate();
-            em.createQuery("DELETE FROM Role r").executeUpdate();
+            em.createQuery("DELETE FROM User").executeUpdate();
+            em.createQuery("DELETE FROM Role").executeUpdate();
+            em.getTransaction().commit();
 
-            User u1 = new User("admin", "admin");
-            User u2 = new User("user", "user");
+            // Insert data into the database
+            User u1 = new User("user", "user");
+            User u2 = new User("admin", "admin");
 
             Role r1 = new Role("admin");
             Role r2 = new Role("user");
 
-            u1.addRole(r1);
-            u2.addRole(r2);
+            u2.addRole(r1);
+            u1.addRole(r2);
 
-            em.persist(u1);
-            em.persist(u2);
+            em.getTransaction().begin();
             em.persist(r1);
             em.persist(r2);
-
+            em.persist(u1);
+            em.persist(u2);
             em.getTransaction().commit();
         }
     }

@@ -34,8 +34,8 @@ public class EndpointTest {
     // Start server
     appConfig = ApplicationConfig.getInstance(emfTest)
         .initiateServer()
-        .setExceptionHandling()
         .checkSecurityRoles()
+        .setRoute(Routs.getSecurityRoutes(emfTest))
         .setRoute(Routs.securedRoutes(emfTest))
         .startServer(7777);
   }
@@ -58,7 +58,7 @@ public class EndpointTest {
     TokenDTO token = RestAssured
         .given()
         .contentType("application/json")
-        .body("{\"username\":\"user\",\"password\":\"user\"}")
+        .body("{\"email\":\"user\",\"password\":\"user\"}")
         .when()
         .post("/auth/login")
         .then()

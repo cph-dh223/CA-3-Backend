@@ -24,14 +24,14 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
     private Set<Note> notes = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"),
             inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password) {
-        this.email = username;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
         String salt = BCrypt.gensalt();
         this.password = BCrypt.hashpw(password, salt);

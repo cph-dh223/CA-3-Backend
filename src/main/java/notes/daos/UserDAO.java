@@ -27,10 +27,10 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User createUser(String username, String password) {
+    public User createUser(String email, String password) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            User user = new User(username, password);
+            User user = new User(email, password);
             Role userRole = em.find(Role.class, "user");
             if (userRole == null) {
                 userRole = new Role("user");
@@ -44,11 +44,11 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User verifyUser(String username, String password) throws EntityNotFoundException {
+    public User verifyUser(String email, String password) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            User user = em.find(User.class, username);
+            User user = em.find(User.class, email);
             if (user == null)
-                throw new EntityNotFoundException("No user found with username: " + username);
+                throw new EntityNotFoundException("No user found with email: " + email);
             if (!user.verifyUser(password))
                 throw new EntityNotFoundException("Wrong password");
             return user;
@@ -63,10 +63,10 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User addRoleToUser(String username, String role) {
+    public User addRoleToUser(String email, String role) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            User user = em.find(User.class, username);
+            User user = em.find(User.class, email);
             Role userRole = em.find(Role.class, role);
             if (userRole == null) {
                 userRole = new Role(role);

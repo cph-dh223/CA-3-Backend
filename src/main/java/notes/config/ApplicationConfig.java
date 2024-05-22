@@ -111,7 +111,7 @@ public class ApplicationConfig {
                 if(user == null)
                     ctx.status(HttpStatus.FORBIDDEN)
                             .json(om.createObjectNode()
-                                    .put("msg","Not authorized. No username were added from the token"));
+                                    .put("msg","Not authorized. No email were added from the token"));
 
                 if (securityController.authorize(user, allowedRoles))
                     handler.handle(ctx);
