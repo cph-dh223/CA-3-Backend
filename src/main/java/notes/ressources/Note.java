@@ -41,9 +41,10 @@ public class Note {
     private Set<User> users = new HashSet<>();
     private String content;
 
-    public Note(String title, String content) {
+    public Note(String title, String content, Category category) {
         this.title = title;
         this.content = content;
+        this.category = category;
     }
 
     public void addUser(User user) {
