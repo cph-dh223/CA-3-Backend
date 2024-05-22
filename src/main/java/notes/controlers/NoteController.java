@@ -1,5 +1,7 @@
 package notes.controlers;
 
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.http.Handler;
@@ -79,6 +81,16 @@ public class NoteController implements IController {
 
             String json = om.writeValueAsString(note);
             ctx.status(HttpStatus.OK).json(json);
+        };
+    }
+
+    public Handler getByTitle(){
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            var filterdNotes = notes.stream().filter(n -> n.getTitle().contains(title)).collect(Collectors.toList());
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(filterdNotes));
         };
     }
 
