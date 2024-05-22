@@ -170,8 +170,8 @@ public class SecurityController implements ISecurityController {
         String SECRET = IS_DEPLOYED ? System.getenv("SECRET_KEY") : this.SECRET_KEY;
 
         try {
-            if (tokenIsValid(token, SECRET) && tokenNotExpired(token)) {
-                return getUserWithRolesFromToken(token);
+            if (TokenUtils.tokenIsValid(token, SECRET) && TokenUtils.tokenNotExpired(token)) {
+                return TokenUtils.getUserWithRolesFromToken(token);
             } else {
                 throw new NotAuthorizedException(403, "Token is not valid");
             }
@@ -181,24 +181,7 @@ public class SecurityController implements ISecurityController {
         }
     }
     
-    @Override
-    public boolean tokenIsValid(String token, String secret) throws ParseException, JOSEException, NotAuthorizedException {
-        return tokenUtils.tokenIsValid(token, secret);
-    }
-    @Override
-    public boolean tokenNotExpired(String token) throws ParseException, NotAuthorizedException {
-        return tokenUtils.tokenNotExpired(token);
-    }
-    @Override
-    public UserDTO getUserWithRolesFromToken(String token) throws ParseException {
-        return tokenUtils.getUserWithRolesFromToken(token);
-    }
-    @Override
-    public int timeToExpire(String token) throws ParseException, NotAuthorizedException {
-        return tokenUtils.timeToExpire(token);
-    }
-
-    
+ 
     
     
     
