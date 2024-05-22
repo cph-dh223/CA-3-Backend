@@ -108,7 +108,11 @@ public class UserDAO implements ISecurityDAO {
             var userToRemove = em.find(User.class, id);
             var notes = userToRemove.getNotes();
             em.remove(userToRemove);
-            notes.forEach(n -> {if(n.getUsers().isEmpty()){em.remove(n);}});
+            notes.forEach(n -> {
+                if (n.getUsers().isEmpty()) {
+                    em.remove(n);
+                }
+            });
             em.getTransaction().commit();
 
         }
@@ -117,14 +121,16 @@ public class UserDAO implements ISecurityDAO {
     public User updateUser(User user) {
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            user.getRoles().stream().forEach(role -> {
-                Role userRole = em.find(Role.class, role.getName());
-                if (userRole == null) {
-                    userRole = new Role(role.getName());
-                    em.persist(userRole);
-                }
-                role = userRole;
-            });
+            if (user.getRoles() != null) {
+                user.getRoles().stream().forEach(role -> {
+                    Role userRole = em.find(Role.class, role.getName());
+                    if (userRole == null) {
+                        userRole = new Role(role.getName());
+                        em.persist(userRole);
+                    }
+                    role = userRole;
+                });
+            }
             em.merge(user);
             em.getTransaction().commit();
         }
