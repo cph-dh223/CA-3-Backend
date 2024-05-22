@@ -36,14 +36,14 @@ public class NoteController implements IController {
             var userID = getUserIdFromToken(ctx);
             var usersNotes = noteDAO.getAll(userID);
             // TODO error handeling
-            ctx.json(om.writeValueAsString(usersNotes));
+            ctx.json(om.writeValueAsString((usersNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList()))));
         };
     }
 
     @Override
     public Handler getById() {
         return ctx -> {
-            var id = Integer.parseInt(ctx.pathParam("noteID"));
+            var id = Integer.parseInt(ctx.pathParam("id"));
             var userID = getUserIdFromToken(ctx);
             var note = noteDAO.getById(id);
             if (note.hasUser(userID)) {
@@ -60,8 +60,9 @@ public class NoteController implements IController {
         return ctx -> {
             Note newNote = ctx.bodyAsClass(Note.class);
             newNote = noteDAO.create(newNote);
-            String json = om.writeValueAsString(newNote);
+            String json = om.writeValueAsString(new NoteDTO(newNote));
             ctx.status(HttpStatus.CREATED).json(json);
+
 
         };
     }
@@ -69,7 +70,7 @@ public class NoteController implements IController {
     @Override
     public Handler delete() {
         return ctx -> {
-            var title = Integer.parseInt(ctx.pathParam("nodeID"));
+            var title = Integer.parseInt(ctx.pathParam("id"));
             Note note = noteDAO.getById(title);
             noteDAO.delete(note);
             ctx.status(HttpStatus.NO_CONTENT);
@@ -79,7 +80,7 @@ public class NoteController implements IController {
     @Override
     public Handler update() {
         return ctx -> {
-            var noteID = Integer.parseInt(ctx.pathParam("noteID"));
+            var noteID = Integer.parseInt(ctx.pathParam("id"));
             var changedNote = ctx.bodyAsClass(NoteDTO.class);
             Note note = noteDAO.getById(noteID);
 
@@ -88,7 +89,7 @@ public class NoteController implements IController {
 
             noteDAO.update(note);
 
-            String json = om.writeValueAsString(note);
+            String json = om.writeValueAsString(new NoteDTO(note));
             ctx.status(HttpStatus.OK).json(json);
         };
     }
@@ -99,37 +100,34 @@ public class NoteController implements IController {
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             var filterdNotes = notes.stream().filter(n -> n.getTitle().contains(title)).collect(Collectors.toList());
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(filterdNotes));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(filterdNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
     public Handler sortByTitle() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getTitle().compareTo(b.getTitle()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
     public Handler sortByCategory() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getCategory().compareTo(b.getCategory()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
     public Handler sortByDate() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
   

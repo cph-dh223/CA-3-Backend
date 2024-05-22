@@ -27,10 +27,10 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User createUser(String username, String password) {
+    public User createUser(String email, String password) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            User user = new User(username, password);
+            User user = new User(email, password);
             Role userRole = em.find(Role.class, "user");
             if (userRole == null) {
                 userRole = new Role("user");
@@ -44,11 +44,11 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User verifyUser(String username, String password) throws EntityNotFoundException {
+    public User verifyUser(String email, String password) throws EntityNotFoundException {
         try (EntityManager em = emf.createEntityManager()) {
-            User user = em.find(User.class, username);
+            User user = em.find(User.class, email);
             if (user == null)
-                throw new EntityNotFoundException("No user found with username: " + username);
+                throw new EntityNotFoundException("No user found with email: " + email);
             if (!user.verifyUser(password))
                 throw new EntityNotFoundException("Wrong password");
             return user;
@@ -63,10 +63,10 @@ public class UserDAO implements ISecurityDAO {
     }
 
     @Override
-    public User addRoleToUser(String username, String role) {
+    public User addRoleToUser(String email, String role) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            User user = em.find(User.class, username);
+            User user = em.find(User.class, email);
             Role userRole = em.find(Role.class, role);
             if (userRole == null) {
                 userRole = new Role(role);
@@ -87,11 +87,53 @@ public class UserDAO implements ISecurityDAO {
         }
     }
 
+    public User getUserById(String id) {
+        try (var em = emf.createEntityManager()) {
+            return em.find(User.class, id);
+        }
+    }
+
     public List<Role> getAllRoles() {
         try (var em = emf.createEntityManager()) {
             TypedQuery<Role> q = em.createQuery("SELECT r FROM Role r", Role.class);
             List<Role> roles = q.getResultList();
             return roles;
         }
+    }
+
+    public void deleteUser(String id) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+
+            var userToRemove = em.find(User.class, id);
+            var notes = userToRemove.getNotes();
+            em.remove(userToRemove);
+            notes.forEach(n -> {
+                if (n.getUsers().isEmpty()) {
+                    em.remove(n);
+                }
+            });
+            em.getTransaction().commit();
+
+        }
+    }
+
+    public User updateUser(User user) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            if (user.getRoles() != null) {
+                user.getRoles().stream().forEach(role -> {
+                    Role userRole = em.find(Role.class, role.getName());
+                    if (userRole == null) {
+                        userRole = new Role(role.getName());
+                        em.persist(userRole);
+                    }
+                    role = userRole;
+                });
+            }
+            em.merge(user);
+            em.getTransaction().commit();
+        }
+        return user;
     }
 }

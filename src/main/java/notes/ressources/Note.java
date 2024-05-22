@@ -9,12 +9,14 @@ import org.hibernate.metamodel.mapping.internal.GeneratedValuesProcessor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
+@NoArgsConstructor
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +38,7 @@ public class Note {
     private LocalDate date;
     private LocalDate lastEditDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     @JsonBackReference
     private Set<User> users = new HashSet<>();
@@ -44,6 +47,11 @@ public class Note {
     public Note(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+    public Note(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
     }
 
     public void addUser(User user) {
@@ -62,6 +70,15 @@ public class Note {
 
     public boolean hasUser(String userID) {
         return users.stream().map(u -> u.getEmail().equals(userID)).reduce(false, (acc, u) -> acc || u ? true : false);
+    }
+    
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    @PreRemove
+    public void removeUser() {
+        users.forEach(u -> u.removeNote(this));
     }
 
 }

@@ -19,9 +19,10 @@ public class NoteDAO extends ADAO<Note, Integer> {
     }
     public List<Note> getAll(String email) {
         try(EntityManager em = emf.createEntityManager()){
-            var query = em.createQuery("SELECT n FROM Note n JOIN User u WHERE u.email = :email",Note.class);
+            var query = em.createQuery("SELECT n FROM User u JOIN u.notes n WHERE u.email = :email", Note.class);
             query.setParameter("email", email);
-            return query.getResultList();
+            List<Note> notes = query.getResultList();
+            return notes;
         }
     }
 

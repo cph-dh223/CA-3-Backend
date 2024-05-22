@@ -26,8 +26,8 @@ public class UserDTO {
         roles    = user.getRolesAsStrings();
     }
 
-    public UserDTO(String username, Set<String> rolesSet) {
-        this.email = username;
+    public UserDTO(String email, Set<String> rolesSet) {
+        this.email = email;
         roles = rolesSet;
     }
 }

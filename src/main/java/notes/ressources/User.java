@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import notes.dtos.UserDTO;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,17 +24,15 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Note> notes = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"),
-            inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password) {
-        this.email = username;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
         String salt = BCrypt.gensalt();
         this.password = BCrypt.hashpw(password, salt);
@@ -62,9 +63,24 @@ public class User {
         return rolesAsStrings;
     }
 
-    public void addNote(Note note){
+    public void addNote(Note note) {
         notes.add(note);
         note.addUser(this);
     }
 
+    public void updateUserFromDTO(UserDTO userDTO) {
+        this.email = userDTO.getEmail();
+        this.password = userDTO.getPassword();
+        if(userDTO.getRoles() != null){
+        this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());}
+    }
+
+    @PreRemove     
+    public void preRemove(){
+        notes.forEach(n -> n.removeUser(this));
+    }
+
+    public void removeNote(Note note) {
+        notes.remove(note);
+    }
 }
