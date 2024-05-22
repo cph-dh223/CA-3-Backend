@@ -52,13 +52,17 @@ public class Note {
     }
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         date = LocalDate.now();
     }
 
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         lastEditDate = LocalDate.now();
+    }
+
+    public boolean hasUser(String userID) {
+        return users.stream().map(u -> u.getEmail().equals(userID)).reduce(false, (acc, u) -> acc || u ? true : false);
     }
 
 }

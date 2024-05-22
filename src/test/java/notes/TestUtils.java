@@ -3,6 +3,7 @@ package notes;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import notes.daos.UserDAO;
 import notes.ressources.Category;
 import notes.ressources.Note;
 import notes.ressources.Role;
