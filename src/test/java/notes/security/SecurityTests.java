@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import notes.TestUtils;
 import notes.config.ApplicationConfig;
 import notes.config.HibernateConfig;
@@ -58,8 +59,7 @@ public class SecurityTests {
 
     @BeforeEach
     public void setUpEach() {
-        // Setup test database for each test
-        // new TestUtils().createUsersAndRoles(emfTest);
+new TestUtils().createUsersAndRoles(emfTest);
         
     }
     
@@ -180,11 +180,5 @@ public class SecurityTests {
             .statusCode(200)
             .body("msg", equalTo("Hello from ADMIN Protected"))
             ;
-            
-        
-    
     }
-    
-    
-    
 }

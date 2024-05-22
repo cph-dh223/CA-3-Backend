@@ -3,7 +3,7 @@ package notes.controlers;
 import io.javalin.http.Handler;
 import notes.daos.UserDAO;
 
-public class UserController implements IController{
+public class UserController implements IController {
   private UserDAO userDAO;
 
   public UserController(UserDAO userDAO) {
@@ -12,31 +12,39 @@ public class UserController implements IController{
 
   @Override
   public Handler getAll() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    return ctx -> {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    };
   }
 
   @Override
   public Handler getById() {
+    return ctx -> {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getById'");
+    };
   }
 
   @Override
   public Handler create() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'create'");
-  }
+    return ctx -> {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'create'");
+    };}
 
   @Override
   public Handler delete() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
-  }
+    return ctx -> {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    };}
 
   @Override
   public Handler update() {
+    return ctx -> {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'update'");
+    };
   }
 }

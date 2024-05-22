@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.apibuilder.EndpointGroup;
 
 public class TestUtils {
-    public void createnotessAndRooms(EntityManagerFactory emfTest) {
+    public void createNotes(EntityManagerFactory emfTest) {
         try (EntityManager em = emfTest.createEntityManager()) {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM Note n").executeUpdate();
@@ -68,14 +68,6 @@ public class TestUtils {
 
             em.getTransaction().commit();
         }
-    }
-
-    public Map<String, User> getUsers(EntityManagerFactory emfTest) {
-        return new UserDAO(emfTest).getAllUsers().stream().collect(Collectors.toMap(u -> u.getUsername(), u -> u));
-    }
-
-    public Map<String, Role> getRoles(EntityManagerFactory emfTest) {
-        return new UserDAO(emfTest).getAllRoles().stream().collect(Collectors.toMap(r -> r.getName(), r -> r));
     }
 
 }
