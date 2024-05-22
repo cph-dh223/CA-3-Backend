@@ -106,7 +106,6 @@ public class NoteController implements IController {
 
     public Handler sortByTitle() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getTitle().compareTo(b.getTitle()));
@@ -116,7 +115,6 @@ public class NoteController implements IController {
 
     public Handler sortByCategory() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getCategory().compareTo(b.getCategory()));
@@ -126,7 +124,6 @@ public class NoteController implements IController {
 
     public Handler sortByDate() {
         return ctx -> {
-            String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));

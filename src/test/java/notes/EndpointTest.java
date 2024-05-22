@@ -156,5 +156,35 @@ public class EndpointTest {
         .when().put("/users/update").peek().then().assertThat().statusCode(200);
   }
 
+  @Test
+  void deleteUser() {
+    TokenDTO token = getAdminToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().delete("/users/delete/user").peek().then().assertThat()
+        .statusCode(204);
+  }
 
+  @Test
+  void sortNotesByTitle() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/notes/sort/title").peek().then().assertThat()
+        .statusCode(200);
+  }
+
+  @Test
+  void sortNotesByCategory() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/notes/sort/category").peek().then().assertThat()
+        .statusCode(200);
+  }
+
+  @Test
+  void sortNotesByDate() {
+    TokenDTO token = getUserToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/notes/sort/date").peek().then().assertThat()
+        .statusCode(200);
+  }
 }
