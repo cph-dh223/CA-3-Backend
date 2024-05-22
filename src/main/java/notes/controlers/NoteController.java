@@ -84,7 +84,7 @@ public class NoteController implements IController {
         };
     }
 
-    public Handler getByTitle(){
+    public Handler getByTitle() {
         return ctx -> {
             String title = ctx.pathParam("title");
             String userID = getUserIdFromToken(ctx);
@@ -94,4 +94,33 @@ public class NoteController implements IController {
         };
     }
 
+    public Handler sortByTitle() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getTitle().compareTo(b.getTitle()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
+
+    public Handler sortByCategory() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getCategory().compareTo(b.getCategory()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
+
+    public Handler sortByDate() {
+        return ctx -> {
+            String title = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes));
+        };
+    }
 }
