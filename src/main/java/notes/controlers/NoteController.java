@@ -36,7 +36,7 @@ public class NoteController implements IController {
             var userID = getUserIdFromToken(ctx);
             var usersNotes = noteDAO.getAll(userID);
             // TODO error handeling
-            ctx.json(om.writeValueAsString(usersNotes));
+            ctx.json(om.writeValueAsString((usersNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList()))));
         };
     }
 
