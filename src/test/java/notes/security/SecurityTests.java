@@ -56,7 +56,7 @@ public class SecurityTests {
 
     @BeforeEach
     public void setUpEach() {
-        new TestUtils().createUsersAndRoles(emfTest);
+        new TestUtils().createNotesAndUsers(emfTest);
 
     }
 
@@ -64,11 +64,6 @@ public class SecurityTests {
     static void afterAll() {
         HibernateConfig.setTestMode(false);
         appConfig.stopServer();
-    }
-
-    @Test
-    public void defTest() {
-        given().when().get("/").peek().then().statusCode(200);
     }
 
     @Test

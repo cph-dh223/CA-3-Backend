@@ -28,9 +28,7 @@ public class User {
     private Set<Note> notes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"),
-            inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     private Set<Role> roles = new HashSet<>();
 
     public User(String email, String password) {
@@ -65,7 +63,7 @@ public class User {
         return rolesAsStrings;
     }
 
-    public void addNote(Note note){
+    public void addNote(Note note) {
         notes.add(note);
         note.addUser(this);
     }
