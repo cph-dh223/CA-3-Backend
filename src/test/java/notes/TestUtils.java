@@ -14,6 +14,7 @@ public class TestUtils {
         try (EntityManager em = emfTest.createEntityManager()) {
             em.getTransaction().begin();
             em.createQuery("DELETE FROM Note n").executeUpdate();
+            em.createNativeQuery("ALTER SEQUENCE note_id_seq RESTART WITH 1").executeUpdate();  
 
             Note n1 = new Note("title1", "this is the first note", Category.NOTE);
             Note n2 = new Note("title2", "this is the second note", Category.REMINDER);
