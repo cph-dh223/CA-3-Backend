@@ -139,5 +139,22 @@ public class EndpointTest {
         .statusCode(200);
   }
 
+  @Test
+  void getUserById() {
+    TokenDTO token = getAdminToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header).when().get("/users/user").peek().then().assertThat()
+        .statusCode(200);
+  }
+
+  @Test
+  void updateUser() {
+    TokenDTO token = getAdminToken();
+    Header header = new Header("Authorization", "Bearer " + token.getToken());
+    given().contentType("application/json").header(header)
+        .body("{\"email\":\"user\",\"password\":\"newPassword\"}")
+        .when().put("/users/update").peek().then().assertThat().statusCode(200);
+  }
+
 
 }

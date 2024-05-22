@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import notes.dtos.UserDTO;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,7 +24,7 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Note> notes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -67,4 +70,9 @@ public class User {
         note.addUser(this);
     }
 
+    public void updateUserFromDTO(UserDTO userDTO) {
+        this.email = userDTO.getEmail();
+        this.password = userDTO.getPassword();
+        this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());
+    }
 }
