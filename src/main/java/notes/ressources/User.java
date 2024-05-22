@@ -75,4 +75,9 @@ public class User {
         this.password = userDTO.getPassword();
         this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());
     }
+
+    @PreRemove
+    public void preRemove(){
+        notes.forEach(n -> n.removeUser(this));
+    }
 }
