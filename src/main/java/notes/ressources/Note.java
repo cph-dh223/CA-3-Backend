@@ -70,5 +70,8 @@ public class Note {
     public boolean hasUser(String userID) {
         return users.stream().map(u -> u.getEmail().equals(userID)).reduce(false, (acc, u) -> acc || u ? true : false);
     }
+    public void removeUser(User user) {
+        users.remove(user);
+    }
 
 }

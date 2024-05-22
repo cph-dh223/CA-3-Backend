@@ -71,8 +71,11 @@ public class User {
     public void updateUserFromDTO(UserDTO userDTO) {
         this.email = userDTO.getEmail();
         this.password = userDTO.getPassword();
-        if (userDTO.getRoles() != null) {
-            this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());
-        }
-    }  
+        this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());
+    }
+
+    @PreRemove
+    public void preRemove(){
+        notes.forEach(n -> n.removeUser(this));
+    }
 }
