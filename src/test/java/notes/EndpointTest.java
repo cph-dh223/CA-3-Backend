@@ -45,7 +45,6 @@ public class EndpointTest {
     // Setup test database for each test
     new TestUtils().createNotes(emfTest);
     new TestUtils().createUsersAndRoles(emfTest);
-
   }
 
   @AfterAll

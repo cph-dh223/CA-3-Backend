@@ -28,55 +28,63 @@ public class ApplicationConfig {
 
     private ISecurityController securityController;
     private static ApplicationConfig instance;
-    private ApplicationConfig(EntityManagerFactory emf){
+
+    private ApplicationConfig(EntityManagerFactory emf) {
         securityController = new SecurityController(new UserDAO(emf));
     }
-    public static ApplicationConfig getInstance(EntityManagerFactory emf){
-        if(instance == null){
+
+    public static ApplicationConfig getInstance(EntityManagerFactory emf) {
+        if (instance == null) {
             instance = new ApplicationConfig(emf);
         }
         return instance;
     }
-    
-    public static ApplicationConfig getInstance(){
-        if(instance == null){
-            //todo
+
+    public static ApplicationConfig getInstance() {
+        if (instance == null) {
+            // todo
         }
         return instance;
     }
-    public ApplicationConfig initiateServer(){
-        app = Javalin.create(config->{
-        config.http.defaultContentType = "application/json";
-        config.routing.contextPath = "/api";
+
+    public ApplicationConfig initiateServer() {
+        app = Javalin.create(config -> {
+            config.http.defaultContentType = "application/json";
+            config.routing.contextPath = "/api";
         });
 
         return instance;
     }
-    public ApplicationConfig startServer(int port){
+
+    public ApplicationConfig startServer(int port) {
         app.start(port);
         return instance;
     }
-    public ApplicationConfig setRoute(EndpointGroup route){
+
+    public ApplicationConfig setRoute(EndpointGroup route) {
         app.routes(route);
         return instance;
     }
 
-    public ApplicationConfig setExceptionHandling(){
-        app.exception(Exception.class, (e,ctx)->{
-            if(e instanceof ApiException) {
-                ApiException apiException = (ApiException)e;
+    public ApplicationConfig setExceptionHandling() {
+        app.exception(Exception.class, (e, ctx) -> {
+            if (e instanceof ApiException) {
+                ApiException apiException = (ApiException) e;
 
-                ctx.status(apiException.getStatusCode()).json(om.createObjectNode().put("errrorMessage",apiException.getMessage()));
+                ctx.status(apiException.getStatusCode())
+                        .json(om.createObjectNode().put("errrorMessage", apiException.getMessage()));
                 return;
             }
-            ObjectNode node = om.createObjectNode().put("errrorMessage",e.getMessage());
+            ObjectNode node = om.createObjectNode().put("errrorMessage", e.getMessage());
             ctx.status(500).json(node);
         });
         return instance;
     }
-    public void stopServer(){
+
+    public void stopServer() {
         app.stop();
     }
+
     public ApplicationConfig configureCors() {
         app.before(ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
@@ -92,36 +100,41 @@ public class ApplicationConfig {
 
         return instance;
     }
+
     public ApplicationConfig checkSecurityRoles() {
-        // Check roles on the user (ctx.attribute("username") and compare with permittedRoles using securityController.authorize()
+        // Check roles on the user (ctx.attribute("username") and compare with
+        // permittedRoles using securityController.authorize()
         app.updateConfig(config -> {
 
             config.accessManager((handler, ctx, permittedRoles) -> {
-                // permitted roles are defined in the last arg to routes: get("/", ctx -> ctx.result("Hello World"), Role.ANYONE);
-
-                Set<String> allowedRoles = permittedRoles.stream().map(role -> role.toString().toUpperCase()).collect(Collectors.toSet());
-                if(allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
+                // permitted roles are defined in the last arg to routes: get("/", ctx ->
+                // ctx.result("Hello World"), Role.ANYONE);
+                        
+                Set<String> allowedRoles = permittedRoles.stream().map(role -> role.toString().toUpperCase())
+                        .collect(Collectors.toSet());
+                if (allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
                     // Allow requests from anyone and OPTIONS requests (preflight in CORS)
                     handler.handle(ctx);
                     return;
                 }
 
                 UserDTO user = ctx.attribute("user");
-                System.out.println("USER IN CHECK_SEC_ROLES: "+user);
-                if(user == null)
+                System.out.println("USER IN CHECK_SEC_ROLES: " + user);
+                if (user == null)
                     ctx.status(HttpStatus.FORBIDDEN)
                             .json(om.createObjectNode()
-                                    .put("msg","Not authorized. No email were added from the token"));
+                                    .put("msg", "Not authorized. No email were added from the token"));
 
                 if (securityController.authorize(user, allowedRoles))
                     handler.handle(ctx);
-                else
-                {
-                    String userRoles =user.getRoles().stream().filter(r -> r.length() > 0).reduce("", (acc, r) -> acc + " " + r.toUpperCase() + ",").strip().replaceAll(",$", "");
-                    throw new ApiException(HttpStatus.FORBIDDEN.getCode(), "Unauthorized with roles: [" + userRoles + "]");
+                else {
+                    String userRoles = user.getRoles().stream().filter(r -> r.length() > 0)
+                            .reduce("", (acc, r) -> acc + " " + r.toUpperCase() + ",").strip().replaceAll(",$", "");
+                    throw new ApiException(HttpStatus.FORBIDDEN.getCode(),
+                            "Unauthorized with roles: [" + userRoles + "]");
                 }
             });
-        });                
+        });
 
         return instance;
     }

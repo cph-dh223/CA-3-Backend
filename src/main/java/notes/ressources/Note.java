@@ -9,6 +9,7 @@ import org.hibernate.metamodel.mapping.internal.GeneratedValuesProcessor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class Note {
     private LocalDate date;
     private LocalDate lastEditDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     @JsonBackReference
     private Set<User> users = new HashSet<>();

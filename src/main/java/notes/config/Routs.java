@@ -34,8 +34,8 @@ public class Routs {
         UserController userController = new UserController(new UserDAO(emf));
 
         return () -> {
+            before(securityController.authenticate());
             path("/protected", () -> {
-                before(securityController.authenticate());
                 get("/user_demo", (ctx) -> ctx.json(om.createObjectNode().put("msg", "Hello from USER Protected")),
                         Role.USER);
                 get("/admin_demo", (ctx) -> ctx.json(om.createObjectNode().put("msg", "Hello from ADMIN Protected")),
