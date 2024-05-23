@@ -68,15 +68,20 @@ public class User {
         note.addUser(this);
     }
 
-    public void updateUserFromDTO(UserDTO userDTO) {
+    public void updateMailAndRolesFromDTO(UserDTO userDTO) {
         this.email = userDTO.getEmail();
-        this.password = userDTO.getPassword();
-        if(userDTO.getRoles() != null){
-        this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());}
+        if (userDTO.getRoles() != null) {
+            this.roles = userDTO.getRoles().stream().map(r -> new Role(r)).collect(Collectors.toSet());
+        }
     }
 
-    @PreRemove     
-    public void preRemove(){
+    public void updatePasswordFromDTO(UserDTO userDTO) {
+        String salt = BCrypt.gensalt();
+        this.password = BCrypt.hashpw(userDTO.getPassword(), salt);
+    }
+
+    @PreRemove
+    public void preRemove() {
         notes.forEach(n -> n.removeUser(this));
     }
 
