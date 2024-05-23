@@ -45,7 +45,7 @@ public class main {
             
             
 
-            User admin = new User("admin", "1234");
+            User admin = new User("admin", "1234"); //TODO bedere sequrety, admin credentails shuld not be this visible
 
             admin.addNote(n1);
             admin.addNote(n2);
