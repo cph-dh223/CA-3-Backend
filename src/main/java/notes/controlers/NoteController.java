@@ -135,7 +135,21 @@ public class NoteController implements IController {
                     .json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
-  
+
+    public Handler findByTitle() {
+        return ctx -> {
+            String seachTitle = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            ctx.status(HttpStatus.OK)
+                    .json(om.writeValueAsString(notes.stream()
+                            .filter(n -> n.getTitle().contains(seachTitle))
+                            .map(n -> new NoteDTO(n))
+                            .collect(Collectors.toList())));
+        };
+
+    }
+
     private String getUserIdFromToken(Context ctx) throws ParseException {
         var header = ctx.headerMap();
         var token = (header.get("Authorization").split(" "))[1];
