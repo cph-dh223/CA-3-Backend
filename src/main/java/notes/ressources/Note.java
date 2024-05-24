@@ -54,6 +54,14 @@ public class Note {
         this.category = category;
     }
 
+    public Note(int id, String title, String content, Category category) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+
     public void addUser(User user) {
         users.add(user);
     }
