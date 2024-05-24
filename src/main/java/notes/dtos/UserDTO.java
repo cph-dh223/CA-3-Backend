@@ -20,10 +20,10 @@ public class UserDTO {
     private String password;
     private Set<String> roles;
 
-    public UserDTO (User user){
+    public UserDTO(User user) {
         email = user.getEmail();
         password = user.getPassword();
-        roles    = user.getRolesAsStrings();
+        roles = user.getRolesAsStrings();
     }
 
     public UserDTO(String email, Set<String> rolesSet) {

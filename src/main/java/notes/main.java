@@ -46,6 +46,11 @@ public class main {
             
 
             User admin = new User("admin", "1234"); //TODO bedere sequrety, admin credentails shuld not be this visible
+            User u1 = new User("u1", "1234");
+            User u2 = new User("u2", "1234");
+            User u3 = new User("u3", "1234");
+            User u4 = new User("u4", "1234");
+        
 
             admin.addNote(n1);
             admin.addNote(n2);
@@ -53,13 +58,24 @@ public class main {
             System.out.println(admin.getNotes());
 
             Role adminRole = new Role("admin");
+            Role userRole = new Role("user");
             admin.addRole(adminRole);
+            u1.addRole(userRole);
+            u2.addRole(userRole);
+            u3.addRole(userRole);
+            u4.addRole(userRole);
+            
             
             em.persist(n1);
             em.persist(n2);
             em.persist(n3);
             em.persist(admin);
             em.persist(adminRole);
+            em.persist(userRole);
+            em.persist(u1);
+            em.persist(u2);
+            em.persist(u3);
+            em.persist(u4);
 
             em.getTransaction().commit();
         }

@@ -21,10 +21,11 @@ public class UserController implements IController {
     @Override
     public Handler getAll() {
         return ctx -> {
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(userDAO.getAllUsers().stream().map(u -> new UserDTO(u)).collect(Collectors.toList())));
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(
+                    userDAO.getAllUsers().stream().map(u -> new UserDTO(u)).collect(Collectors.toList())));
         };
     }
-    
+
     @Override
     public Handler getById() {
         return ctx -> {
@@ -56,7 +57,10 @@ public class UserController implements IController {
         return ctx -> {
             var userDTO = ctx.bodyAsClass(UserDTO.class);
             var userToUpdate = userDAO.getUserById(userDTO.getEmail());
-            userToUpdate.updateUserFromDTO(userDTO);
+            userToUpdate.updateMailAndRolesFromDTO(userDTO);
+            if (!userToUpdate.verifyUser(userDTO.getPassword())) {
+                userToUpdate.updatePasswordFromDTO(userDTO);
+            }
             userToUpdate = userDAO.updateUser(userToUpdate);
             ctx.status(HttpStatus.OK).json(om.writeValueAsString(new UserDTO(userToUpdate)));
         };

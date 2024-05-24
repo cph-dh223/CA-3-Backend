@@ -89,13 +89,13 @@ public class ApplicationConfig {
         app.before(ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
             ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            ctx.header("Access-Control-Allow-Headers", "Content-Type");
+            ctx.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
         });
 
         app.options("/*", ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
             ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            ctx.header("Access-Control-Allow-Headers", "Content-Type");
+            ctx.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
         });
 
         return instance;
@@ -109,7 +109,7 @@ public class ApplicationConfig {
             config.accessManager((handler, ctx, permittedRoles) -> {
                 // permitted roles are defined in the last arg to routes: get("/", ctx ->
                 // ctx.result("Hello World"), Role.ANYONE);
-                        
+
                 Set<String> allowedRoles = permittedRoles.stream().map(role -> role.toString().toUpperCase())
                         .collect(Collectors.toSet());
                 if (allowedRoles.contains("ANYONE") || ctx.method().toString().equals("OPTIONS")) {
