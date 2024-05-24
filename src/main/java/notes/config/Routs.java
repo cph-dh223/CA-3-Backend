@@ -46,6 +46,7 @@ public class Routs {
                     put("/update/{id}", noteController.update(), Role.USER, Role.ADMIN);
                     delete("/delete/{id}", noteController.delete(), Role.USER, Role.ADMIN);
                 });
+                get("/notes/search/{noteID}",noteController.findByTitle(), Role.USER, Role.ADMIN);
             });
             path("/notes", () -> {
                 get("/", noteController.getAll(), Role.USER, Role.ADMIN);

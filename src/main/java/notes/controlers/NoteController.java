@@ -1,9 +1,7 @@
 package notes.controlers;
 
-
 import java.util.stream.Collectors;
 import java.text.ParseException;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +13,7 @@ import notes.dtos.NoteDTO;
 import notes.dtos.UserDTO;
 import notes.exceptions.ApiException;
 import notes.ressources.Note;
+import notes.ressources.User;
 import notes.utils.TokenUtils;
 
 public class NoteController implements IController {
@@ -36,7 +35,8 @@ public class NoteController implements IController {
             var userID = getUserIdFromToken(ctx);
             var usersNotes = noteDAO.getAll(userID);
             // TODO error handeling
-            ctx.json(om.writeValueAsString((usersNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList()))));
+            ctx.json(
+                    om.writeValueAsString((usersNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList()))));
         };
     }
 
@@ -58,11 +58,12 @@ public class NoteController implements IController {
     @Override
     public Handler create() {
         return ctx -> {
-            Note newNote = ctx.bodyAsClass(Note.class);
+            NoteDTO newNoteDTO = ctx.bodyAsClass(NoteDTO.class);
+            Note newNote = new Note(newNoteDTO.getTitle(), newNoteDTO.getContent());
+            newNote.addUser(new User(getUserIdFromToken(ctx), null));
             newNote = noteDAO.create(newNote);
             String json = om.writeValueAsString(new NoteDTO(newNote));
             ctx.status(HttpStatus.CREATED).json(json);
-
 
         };
     }
@@ -100,7 +101,8 @@ public class NoteController implements IController {
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
             var filterdNotes = notes.stream().filter(n -> n.getTitle().contains(title)).collect(Collectors.toList());
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(filterdNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
+            ctx.status(HttpStatus.OK).json(
+                    om.writeValueAsString(filterdNotes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
@@ -108,8 +110,9 @@ public class NoteController implements IController {
         return ctx -> {
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
-            notes.sort((a,b) -> a.getTitle().compareTo(b.getTitle()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
+            notes.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+            ctx.status(HttpStatus.OK)
+                    .json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
@@ -117,8 +120,9 @@ public class NoteController implements IController {
         return ctx -> {
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
-            notes.sort((a,b) -> a.getCategory().compareTo(b.getCategory()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
+            notes.sort((a, b) -> a.getCategory().compareTo(b.getCategory()));
+            ctx.status(HttpStatus.OK)
+                    .json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
 
@@ -126,11 +130,26 @@ public class NoteController implements IController {
         return ctx -> {
             String userID = getUserIdFromToken(ctx);
             var notes = noteDAO.getAll(userID);
-            notes.sort((a,b) -> a.getDate().compareTo(b.getDate()));
-            ctx.status(HttpStatus.OK).json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
+            notes.sort((a, b) -> a.getDate().compareTo(b.getDate()));
+            ctx.status(HttpStatus.OK)
+                    .json(om.writeValueAsString(notes.stream().map(n -> new NoteDTO(n)).collect(Collectors.toList())));
         };
     }
-  
+
+    public Handler findByTitle() {
+        return ctx -> {
+            String seachTitle = ctx.pathParam("title");
+            String userID = getUserIdFromToken(ctx);
+            var notes = noteDAO.getAll(userID);
+            ctx.status(HttpStatus.OK)
+                    .json(om.writeValueAsString(notes.stream()
+                            .filter(n -> n.getTitle().contains(seachTitle))
+                            .map(n -> new NoteDTO(n))
+                            .collect(Collectors.toList())));
+        };
+
+    }
+
     private String getUserIdFromToken(Context ctx) throws ParseException {
         var header = ctx.headerMap();
         var token = (header.get("Authorization").split(" "))[1];
