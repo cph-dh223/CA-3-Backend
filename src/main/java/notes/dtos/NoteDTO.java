@@ -11,6 +11,8 @@ import notes.ressources.Note;
 @Setter
 @AllArgsConstructor
 public class NoteDTO {
+
+    private int id;
     private String title;
     private String content;
 
