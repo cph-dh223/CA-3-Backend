@@ -3,6 +3,7 @@ package notes;
 import notes.config.ApplicationConfig;
 import notes.config.HibernateConfig;
 import notes.config.Routs;
+import notes.ressources.Category;
 import notes.ressources.Note;
 import notes.ressources.Role;
 import notes.ressources.User;
@@ -39,9 +40,9 @@ public class main {
             em.createQuery("DELETE FROM User u").executeUpdate();
             em.createQuery("DELETE FROM Role r").executeUpdate();
             
-            Note n1 = new Note("n1", "THIS IS NOTE 1");
-            Note n2 = new Note("n2", "THIS IS NOTE 2");
-            Note n3 = new Note("n3", "THIS IS NOTE 3");
+            Note n1 = new Note("n1", "THIS IS NOTE 1", Category.NOTE);
+            Note n2 = new Note("n2", "THIS IS NOTE 2", Category.REMINDER);
+            Note n3 = new Note("n3", "THIS IS NOTE 3", Category.NOTE);
             
             
 
