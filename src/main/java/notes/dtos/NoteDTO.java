@@ -13,11 +13,15 @@ import notes.ressources.Note;
 public class NoteDTO {
 
     private int id;
+
     private String title;
     private String content;
+    private String category;
 
     public NoteDTO(Note note){
+        id = note.getId();
         title = note.getTitle();
         content = note.getContent();
+        category = note.getCategory().toString();
     }
 }

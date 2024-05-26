@@ -22,11 +22,12 @@ public class NoteDAO extends ADAO<Note, Integer> {
             user = em.find(User.class, user.getEmail());
             if (user == null){
                 em.getTransaction().rollback();
+                //TODO: Some exception handling?
                 return null;
             }
             user.addNote(note);
             em.merge(user);
-            em.persist(note);
+            //em.persist(note);
             em.getTransaction().commit();
         }
         return note;

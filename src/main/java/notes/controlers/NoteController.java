@@ -12,6 +12,7 @@ import notes.daos.NoteDAO;
 import notes.dtos.NoteDTO;
 import notes.dtos.UserDTO;
 import notes.exceptions.ApiException;
+import notes.ressources.Category;
 import notes.ressources.Note;
 import notes.ressources.User;
 import notes.utils.TokenUtils;
@@ -59,7 +60,7 @@ public class NoteController implements IController {
     public Handler create() {
         return ctx -> {
             NoteDTO newNoteDTO = ctx.bodyAsClass(NoteDTO.class);
-            Note newNote = new Note(newNoteDTO.getTitle(), newNoteDTO.getContent());
+            Note newNote = new Note(newNoteDTO.getTitle(), newNoteDTO.getContent(), Category.valueOf(newNoteDTO.getCategory()));
             newNote.addUser(new User(getUserIdFromToken(ctx), null));
             newNote = noteDAO.create(newNote);
             String json = om.writeValueAsString(new NoteDTO(newNote));
