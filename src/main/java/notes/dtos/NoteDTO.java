@@ -18,10 +18,13 @@ public class NoteDTO {
     private String content;
     private String category;
 
+    private String date;
+
     public NoteDTO(Note note){
         id = note.getId();
         title = note.getTitle();
         content = note.getContent();
         category = note.getCategory().toString();
+        date = note.getDate().toString();
     }
 }
