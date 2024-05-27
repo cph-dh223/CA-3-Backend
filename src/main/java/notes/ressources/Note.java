@@ -3,6 +3,7 @@ package notes.ressources;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.metamodel.mapping.internal.GeneratedValuesProcessor;
 
@@ -87,6 +88,18 @@ public class Note {
     @PreRemove
     public void removeUser() {
         users.forEach(u -> u.removeNote(this));
+    }
+
+    public void setCategory(String categoryName){
+        category = Category.valueOf(categoryName);
+    }
+
+    public void setUsers(Set<String> usernames){
+        Set<String> currentUsernames = users.parallelStream().map(u -> u.getEmail()).collect(Collectors.toSet());
+        for (String username : usernames) {
+            if(currentUsernames.contains(username)) continue; // jumps over users allready connected to the note
+            users.add(new User(username));
+        }
     }
 
 }

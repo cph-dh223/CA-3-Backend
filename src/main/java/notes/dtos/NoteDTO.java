@@ -1,5 +1,8 @@
 package notes.dtos;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,11 +20,13 @@ public class NoteDTO {
     private String title;
     private String content;
     private String category;
+    private Set<String> colaborators;
 
     public NoteDTO(Note note){
         id = note.getId();
         title = note.getTitle();
         content = note.getContent();
         category = note.getCategory().toString();
+        colaborators = note.getUsers().stream().map(n -> n.getEmail()).collect(Collectors.toSet());
     }
 }

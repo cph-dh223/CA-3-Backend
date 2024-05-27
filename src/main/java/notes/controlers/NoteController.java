@@ -60,7 +60,8 @@ public class NoteController implements IController {
     public Handler create() {
         return ctx -> {
             NoteDTO newNoteDTO = ctx.bodyAsClass(NoteDTO.class);
-            Note newNote = new Note(newNoteDTO.getTitle(), newNoteDTO.getContent(), Category.valueOf(newNoteDTO.getCategory()));
+            Note newNote = new Note(newNoteDTO.getTitle(), newNoteDTO.getContent(),
+                    Category.valueOf(newNoteDTO.getCategory()));
             newNote.addUser(new User(getUserIdFromToken(ctx), null));
             newNote = noteDAO.create(newNote);
             String json = om.writeValueAsString(new NoteDTO(newNote));
@@ -85,8 +86,13 @@ public class NoteController implements IController {
             var noteID = Integer.parseInt(ctx.pathParam("id"));
             var changedNote = ctx.bodyAsClass(NoteDTO.class);
             Note note = noteDAO.getById(noteID);
+            System.out.println("note:" + note.toString());
 
+            note.setTitle(changedNote.getTitle());
             note.setContent(changedNote.getContent());
+            note.setCategory(changedNote.getCategory());
+            note.setUsers(changedNote.getColaborators());
+
             // TODO set up more of the changes
 
             noteDAO.update(note);
