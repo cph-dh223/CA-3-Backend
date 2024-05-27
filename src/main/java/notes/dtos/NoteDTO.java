@@ -22,11 +22,14 @@ public class NoteDTO {
     private String category;
     private Set<String> colaborators;
 
+    private String date;
+
     public NoteDTO(Note note){
         id = note.getId();
         title = note.getTitle();
         content = note.getContent();
         category = note.getCategory().toString();
         colaborators = note.getUsers().stream().map(n -> n.getEmail()).collect(Collectors.toSet());
+        date = note.getDate().toString();
     }
 }

@@ -1,6 +1,7 @@
 package notes.ressources;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,11 +56,12 @@ public class Note {
         this.category = category;
     }
 
-    public Note(int id, String title, String content, Category category) {
+    public Note(int id, String title, String content, Category category, LocalDate date) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.category = category;
+        this.date = date;
     }
 
 
