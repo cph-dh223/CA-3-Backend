@@ -39,6 +39,7 @@ public class main {
             em.createQuery("DELETE FROM Note h").executeUpdate();
             em.createQuery("DELETE FROM User u").executeUpdate();
             em.createQuery("DELETE FROM Role r").executeUpdate();
+            em.createNativeQuery("ALTER SEQUENCE note_id_seq RESTART WITH 1").executeUpdate();  
             
             Note n1 = new Note("n1", "THIS IS NOTE 1", Category.NOTE);
             Note n2 = new Note("n2", "THIS IS NOTE 2", Category.REMINDER);

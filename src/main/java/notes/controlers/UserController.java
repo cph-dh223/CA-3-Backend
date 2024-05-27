@@ -65,4 +65,11 @@ public class UserController implements IController {
             ctx.status(HttpStatus.OK).json(om.writeValueAsString(new UserDTO(userToUpdate)));
         };
     }
+
+    public Handler getAllEmails() {
+        return ctx -> {
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(
+                    userDAO.getAllUsers().stream().map(u -> new UserDTO(u.getEmail(), u.getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet()))).collect(Collectors.toList())));
+        };
+    }
 }

@@ -57,6 +57,7 @@ public class Routs {
             });
             path("/users", () -> {
                 get("/", userController.getAll(), Role.ADMIN);
+                get("/email", userController.getAllEmails(), Role.USER, Role.ADMIN);
                 get("/{id}", userController.getById(), Role.ADMIN);
                 put("/update", userController.update(), Role.ADMIN);
                 delete("/delete/{id}", userController.delete(), Role.ADMIN);

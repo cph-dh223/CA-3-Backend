@@ -18,7 +18,7 @@ public class NoteDAO extends ADAO<Note, Integer> {
     public Note create(Note note) {
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            User user = note.getUsers().parallelStream().findFirst().get();
+            User user = note.getUsers().stream().findFirst().get();
             user = em.find(User.class, user.getEmail());
             if (user == null){
                 em.getTransaction().rollback();
