@@ -40,13 +40,14 @@ public class Routs {
                         Role.ADMIN);
             });
             path("/user", () -> {
+                get("", userController.getUserFromToken(securityController), Role.ANYONE);
                 path("/note", () -> {
                     post("/create", noteController.create(), Role.USER, Role.ADMIN);
                     get("/search/{id}", noteController.getById(), Role.USER, Role.ADMIN);
                     put("/update/{id}", noteController.update(), Role.USER, Role.ADMIN);
                     delete("/delete/{id}", noteController.delete(), Role.USER, Role.ADMIN);
                 });
-                get("/notes/search/{noteID}",noteController.findByTitle(), Role.USER, Role.ADMIN);
+                get("/notes/search/{noteID}", noteController.findByTitle(), Role.USER, Role.ADMIN);
             });
             path("/notes", () -> {
                 get("/", noteController.getAll(), Role.USER, Role.ADMIN);

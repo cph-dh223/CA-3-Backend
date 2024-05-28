@@ -8,6 +8,7 @@ import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import notes.daos.UserDAO;
 import notes.dtos.UserDTO;
+import notes.utils.TokenUtils;
 
 public class UserController implements IController {
     private UserDAO userDAO;
@@ -70,6 +71,16 @@ public class UserController implements IController {
         return ctx -> {
             ctx.status(HttpStatus.OK).json(om.writeValueAsString(
                     userDAO.getAllUsers().stream().map(u -> new UserDTO(u.getEmail(), u.getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet()))).collect(Collectors.toList())));
+        };
+    }
+
+    public Handler getUserFromToken(ISecurityController securityController) {
+        return ctx -> {
+            var token = (ctx.header("Authorization").split(" "))[1];
+            var userDTO = securityController.verifyToken(token);
+            System.out.println("\n\nToken:" + token + "\n\n");
+            System.out.println("\n\nUser:" + userDTO + "\n\n");
+            ctx.status(HttpStatus.OK).json(om.writeValueAsString(userDTO));
         };
     }
 }
