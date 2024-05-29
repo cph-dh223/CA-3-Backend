@@ -43,8 +43,10 @@ public class main {
             
             Note n1 = new Note("n1", "THIS IS NOTE 1", Category.NOTE);
             Note n2 = new Note("n2", "THIS IS NOTE 2", Category.REMINDER);
-            Note n3 = new Note("n3", "THIS IS NOTE 3", Category.NOTE);
-            
+            Note n3 = new Note("a3", "THIS IS NOTE 4", Category.NOTE);
+            Note n4 = new Note("b3", "THIS IS", Category.REMINDER);
+            Note n5 = new Note("3", "THIS IS NOTE 3", Category.NOTE);
+            Note n6 = new Note("3", "THIS IS NOTE 3", Category.REMINDER);
             
 
             User admin = new User("admin", "1234"); //TODO bedere sequrety, admin credentails shuld not be this visible
@@ -57,6 +59,11 @@ public class main {
             admin.addNote(n1);
             admin.addNote(n2);
             admin.addNote(n3);
+            admin.addNote(n4);
+            admin.addNote(n5);
+            admin.addNote(n6);
+            u1.addNote(n1);
+            u2.addNote(n2);
             System.out.println(admin.getNotes());
 
             Role adminRole = new Role("admin");
@@ -71,6 +78,9 @@ public class main {
             em.persist(n1);
             em.persist(n2);
             em.persist(n3);
+            em.persist(n4);
+            em.persist(n5);
+            em.persist(n6);
             em.persist(admin);
             em.persist(adminRole);
             em.persist(userRole);
