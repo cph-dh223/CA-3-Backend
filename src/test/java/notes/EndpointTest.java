@@ -102,7 +102,7 @@ public class EndpointTest {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
     given().contentType("application/json").header(header)
-        .body("{\"title\":\"test\",\"content\":\"test\"}").when()
+        .body("{\"title\":\"test\",\"content\":\"test\", \"category\":\"NOTE\"}").when()
         .put("/user/note/update/1")
         .peek().then().assertThat().statusCode(200);
   }

@@ -25,9 +25,10 @@ public class NoteDAO extends ADAO<Note, Integer> {
                 //TODO: Some exception handling?
                 return null;
             }
-            user.addNote(note);
-            em.merge(user);
-            //em.persist(note);
+
+            em.persist(note);
+            //em.merge(user);
+
             em.getTransaction().commit();
         }
         return note;

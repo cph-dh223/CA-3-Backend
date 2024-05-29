@@ -91,7 +91,10 @@ public class NoteController implements IController {
             note.setTitle(changedNote.getTitle());
             note.setContent(changedNote.getContent());
             note.setCategory(changedNote.getCategory());
-            note.setUsers(changedNote.getColaborators());
+            if(changedNote.getColaborators() != null){
+                note.setUsers(changedNote.getColaborators());
+            }
+
 
             // TODO set up more of the changes
 
