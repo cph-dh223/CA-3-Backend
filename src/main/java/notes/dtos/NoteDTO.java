@@ -24,6 +24,7 @@ public class NoteDTO {
 
     private String date;
 
+
     public NoteDTO(Note note){
         id = note.getId();
         title = note.getTitle();
@@ -31,5 +32,11 @@ public class NoteDTO {
         category = note.getCategory().toString();
         colaborators = note.getUsers().stream().map(n -> n.getEmail()).collect(Collectors.toSet());
         date = note.getDate().toString();
+    }
+
+    public NoteDTO(String title, String content, String category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
     }
 }

@@ -27,13 +27,13 @@ public class TestUtils {
             em.persist(n2);
             em.persist(n3);
             em.persist(n4);
-            em.getTransaction().commit();
+            //em.getTransaction().commit();
 
             // Setup notes
-            em.getTransaction().begin();
+            //em.getTransaction().begin();
             em.createQuery("DELETE FROM User").executeUpdate();
             em.createQuery("DELETE FROM Role").executeUpdate();
-            em.getTransaction().commit();
+            //em.getTransaction().commit();
 
             // Insert data into the database
             User u1 = new User("user", "user");
@@ -41,15 +41,17 @@ public class TestUtils {
 
             Role r1 = new Role("admin");
             Role r2 = new Role("user");
+            em.persist(r1);
+            em.persist(r2);
+
 
             u2.addRole(r1);
             u1.addRole(r2);
             u1.addNote(n1);
             u1.addNote(n2);
 
-            em.getTransaction().begin();
-            em.persist(r1);
-            em.persist(r2);
+            //em.getTransaction().begin();
+
             em.persist(u1);
             em.persist(u2);
             em.getTransaction().commit();
