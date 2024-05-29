@@ -58,9 +58,11 @@ public class UserController implements IController {
             var userDTO = ctx.bodyAsClass(UserDTO.class);
             var userToUpdate = userDAO.getUserById(userDTO.getEmail());
             userToUpdate.updateMailAndRolesFromDTO(userDTO);
-            if (!userToUpdate.verifyUser(userDTO.getPassword())) {
+
+            if (userDTO.getPassword() != null) {
                 userToUpdate.updatePasswordFromDTO(userDTO);
             }
+
             userToUpdate = userDAO.updateUser(userToUpdate);
             ctx.status(HttpStatus.OK).json(om.writeValueAsString(new UserDTO(userToUpdate)));
         };
