@@ -46,15 +46,17 @@ public class Routs {
                     put("/update/{id}", noteController.update(), Role.USER, Role.ADMIN);
                     delete("/delete/{id}", noteController.delete(), Role.USER, Role.ADMIN);
                 });
-                get("/notes/search/{noteID}",noteController.findByTitle(), Role.USER, Role.ADMIN);
+                path("/notes", () -> {
+                    get("/", noteController.getAll(), Role.USER, Role.ADMIN);
+                    get("/searchById/{noteID}",noteController.findByTitle(), Role.USER, Role.ADMIN);
+                    get("/search/{title}", noteController.getByTitle(), Role.ADMIN, Role.USER);
+                    get("/sort/title", noteController.sortByTitle(), Role.ADMIN, Role.USER);
+                    get("/sort/date", noteController.sortByDate(), Role.ADMIN, Role.USER);
+                    get("/sort/category", noteController.sortByCategory(), Role.ADMIN, Role.USER);
+                });
+
             });
-            path("/notes", () -> {
-                get("/", noteController.getAll(), Role.USER, Role.ADMIN);
-                get("/search/{title}", noteController.getByTitle(), Role.ADMIN, Role.USER);
-                get("/sort/title", noteController.sortByTitle(), Role.ADMIN, Role.USER);
-                get("/sort/date", noteController.sortByDate(), Role.ADMIN, Role.USER);
-                get("/sort/category", noteController.sortByCategory(), Role.ADMIN, Role.USER);
-            });
+
             path("/users", () -> {
                 get("/", userController.getAll(), Role.ADMIN);
                 get("/email", userController.getAllEmails(), Role.USER, Role.ADMIN);

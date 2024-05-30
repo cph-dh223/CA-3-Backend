@@ -84,7 +84,7 @@ public class EndpointTest {
   void getAllnotes() {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
-    given().contentType("application/json").header(header).when().get("/notes").then().assertThat()
+    given().contentType("application/json").header(header).when().get("/user/notes").then().assertThat()
         .statusCode(200);
   }
 
@@ -127,7 +127,7 @@ public class EndpointTest {
   void getNoteByTitle() {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
-    given().contentType("application/json").header(header).when().get("/notes/search/title").peek().then().assertThat()
+    given().contentType("application/json").header(header).when().get("/user/notes/search/title").peek().then().assertThat()
         .statusCode(200);
   }
 
@@ -168,7 +168,7 @@ public class EndpointTest {
   void sortNotesByTitle() {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
-    given().contentType("application/json").header(header).when().get("/notes/sort/title").peek().then().assertThat()
+    given().contentType("application/json").header(header).when().get("/user/notes/sort/title").peek().then().assertThat()
         .statusCode(200);
   }
 
@@ -176,7 +176,7 @@ public class EndpointTest {
   void sortNotesByCategory() {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
-    given().contentType("application/json").header(header).when().get("/notes/sort/category").peek().then().assertThat()
+    given().contentType("application/json").header(header).when().get("/user/notes/sort/category").peek().then().assertThat()
         .statusCode(200);
   }
 
@@ -184,7 +184,7 @@ public class EndpointTest {
   void sortNotesByDate() {
     TokenDTO token = getUserToken();
     Header header = new Header("Authorization", "Bearer " + token.getToken());
-    given().contentType("application/json").header(header).when().get("/notes/sort/date").peek().then().assertThat()
+    given().contentType("application/json").header(header).when().get("/user/notes/sort/date").peek().then().assertThat()
         .statusCode(200);
   }
 }
