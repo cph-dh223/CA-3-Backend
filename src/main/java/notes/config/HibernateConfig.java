@@ -88,8 +88,7 @@ public class HibernateConfig {
     }
 
     private static Properties setDeployedProperties(Properties props){
-        props.put("hibernate.connection.url", System.getenv("CONNECTION_STR") + System.getenv("DB_NAME"));
-        System.out.println("\n\n\n\n"+System.getenv("DB_NAME")+"\n\n\n\n");
+        props.put("hibernate.connection.url", System.getenv("CONNECTION_STR"));
         props.put("hibernate.connection.username", System.getenv("DB_USERNAME"));
         props.put("hibernate.connection.password", System.getenv("DB_PASSWORD"));
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect"); // dialect for postgresql
