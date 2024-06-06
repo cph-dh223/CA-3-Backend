@@ -36,4 +36,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/<Todo>:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ch-3-backend:latest
